@@ -1,0 +1,1 @@
+modulex.config("requires",{"event-dom/focusin":["event-dom/base","modulex-util"]});

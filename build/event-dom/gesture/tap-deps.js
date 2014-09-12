@@ -1,0 +1,1 @@
+modulex.config("requires",{"event-dom/gesture/tap":["event-dom/gesture/util","event-dom/base","ua","modulex-util"]});

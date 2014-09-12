@@ -1,0 +1,1 @@
+modulex.config("requires",{"event-dom/hashchange":["modulex-util","event-dom/base","dom","ua"]});

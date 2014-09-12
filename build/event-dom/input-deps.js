@@ -1,0 +1,1 @@
+modulex.config("requires",{"event-dom/input":["event-dom/base","dom"]});

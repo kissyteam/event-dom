@@ -1,0 +1,1 @@
+modulex.config("requires",{"event-dom/ie":["event-dom/base","dom"]});

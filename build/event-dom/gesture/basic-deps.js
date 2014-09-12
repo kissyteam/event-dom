@@ -1,0 +1,1 @@
+modulex.config("requires",{"event-dom/gesture/basic":["event-dom/base","event-dom/gesture/util"]});

@@ -1,0 +1,1 @@
+modulex.config("requires",{"event-dom/gesture/pinch":["event-dom/gesture/util","event-dom/base","feature","modulex-util"]});

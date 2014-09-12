@@ -1,0 +1,1 @@
+modulex.config("requires",{"event-dom/gesture/swipe":["modulex-util","dom","event-dom/gesture/util","event-dom/base"]});
