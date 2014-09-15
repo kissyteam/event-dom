@@ -52,6 +52,7 @@ names.forEach(function (tag) {
     tasks.push(task);
     var dir = path.dirname(tag);
     dir = dir ? '/' + dir : dir;
+    var basename = path.basename(tag);
     gulp.task(task, ['lint'], function () {
         var packages = {};
         packages['event-dom/' + tag] = {
@@ -74,10 +75,10 @@ names.forEach(function (tag) {
             }))
             .pipe(replace(/@VERSION@/g, packageInfo.version))
             .pipe(gulp.dest(path.resolve(build, 'event-dom' + dir)))
-            .pipe(filter(tag + '-debug.js'))
+            .pipe(filter(basename + '-debug.js'))
             .pipe(replace(/@DEBUG@/g, ''))
             .pipe(uglify())
-            .pipe(rename(tag + '.js'))
+            .pipe(rename(basename + '.js'))
             .pipe(gulp.dest(path.resolve(build, 'event-dom' + dir)));
     });
 });

@@ -1227,7 +1227,7 @@ eventDomBase = function (exports) {
   eventDomBaseMouseenter;
   var util = modulexUtil;
   exports = util.merge({
-    version: '1.0.1',
+    version: '1.0.0',
     add: DomEvent.on,
     remove: DomEvent.detach,
     KeyCode: KeyCode,
