@@ -1,6 +1,6 @@
 {
-  "name": "modulex-dom",
-  "version": "1.0.1",
+  "name": "modulex-event-dom",
+  "version": "1.0.0",
   "author": "yiminghe <yiminghe@gmail.com>",
   "engines": {
     "node": "~0.11"
@@ -8,7 +8,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "http://github.com/kissyteam/dom.git"
+    "url": "http://github.com/kissyteam/event-dom.git"
   },
   "testling": {
     "server": "server.js",

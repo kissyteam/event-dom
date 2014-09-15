@@ -6,14 +6,14 @@
 /*jshint quotmark:false*/
 var Dom = require('dom');
 var Event = require('event-dom');
-var tpl = ' <div id="test-focusin">test focusin: <input type="text" value="点击我"/></div><input id="test-focusin-input" type="text" value="另一个输入框"/>',
+var tpl = ' <div id="test-focusin">test focusin: <input type="text" value="点击我"/>' +
+        '<input id="test-focusin-input" type="text" value="另一个输入框"/></div>',
     HAPPENED = 'happened',
     FIRST = '1',
     SECOND = '2',
     SEP = '-';
 
 describe('focusin and focusout', function () {
-
     beforeEach(function () {
         Dom.prepend(Dom.create(tpl), 'body');
         window.focus();
@@ -41,36 +41,36 @@ describe('focusin and focusout', function () {
         });
 
         async.series([
-            function () {
+            runs(function () {
                 result = [];
                 input.focus();
-            },
+            }),
             waits(10),
-            function () {
+            runs(function () {
                 // guarantee bubble
                 expect(result.join(SEP)).to.eql([HAPPENED + "_inner", HAPPENED].join(SEP));
-            },
-            function () {
+            }),
+            runs(function () {
                 result = [];
                 input.blur();
-            },
+            }),
             waits(10),
-            function () {
+            runs(function () {
                 expect(result.join(SEP)).to.eql([HAPPENED + "_inner", HAPPENED].join(SEP));
-            },
-            function () {
+            }),
+            runs(function () {
                 Event.remove(container);
                 result = [];
                 input.focus();
-            },
+            }),
             waits(10),
-            function () {
+            runs(function () {
                 expect(result.join(SEP)).to.eql([HAPPENED + "_inner"].join(SEP));
-            },
-            function () {
+            }),
+            runs(function () {
                 Event.remove(input);
-            }
-        ],done);
+            })
+        ], done);
     });
 
     it('should trigger the focusin/focusout event and focus event in order.', function (done) {
@@ -86,25 +86,25 @@ describe('focusin and focusout', function () {
         });
 
         async.series([
-            function () {
+            runs(function () {
                 result = [];
                 input.focus();
-            },
+            }),
             waits(0),
-            function () {
+            runs(function () {
                 expect(result.join(SEP)).to.eql([FIRST, SECOND].join(SEP));
-            },
-            function () {
+            }),
+            runs(function () {
                 result = [];
                 input.blur();
-            },
+            }),
             waits(0),
-            function () {
+            runs(function () {
 
                 expect(result.join(SEP)).to.eql([FIRST, SECOND].join(SEP));
 
-            }
-        ],done);
+            })
+        ], done);
     });
 
 
@@ -126,33 +126,33 @@ describe('focusin and focusout', function () {
         });
 
         async.series([
-            function () {
+            runs(function () {
                 result = [];
                 input.focus();
-            },
+            }),
             waits(10),
-            function () {
+            runs(function () {
                 // guarantee bubble
                 expect(result).to.eql([1]);
-            },
-            function () {
+            }),
+            runs(function () {
                 result = [];
                 input.blur();
-            },
+            }),
             waits(10),
-            function () {
+            runs(function () {
                 expect(result).to.eql([2]);
-            },
-            function () {
+            }),
+            runs(function () {
                 Event.remove(container);
                 result = [];
                 input.focus();
-            },
+            }),
             waits(10),
             runs(function () {
                 expect(result).to.eql([]);
             })
-        ],done);
+        ], done);
     });
 
 });

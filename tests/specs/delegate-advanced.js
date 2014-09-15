@@ -7,7 +7,6 @@ var Dom = require('dom');
 var Event = require('event-dom');
 /*jshint quotmark:false*/
 describe('delegate-advanced', function () {
-
     beforeEach(function () {
         Dom.append(Dom.create("<div id='delegateAdvanced' class='a'>" +
             "<div id='delegateAdvanced0' class='b'>" +
@@ -116,19 +115,20 @@ describe('delegate-advanced', function () {
         });
         Event.undelegate("#delegateAdvanced");
         Dom.get("#delegateAdvanced2").click();
-        async.series([function (next) {
-            setTimeout(100, next);
-        }, function () {
-            expect(ret).to.eql([3]);
-        }, function () {
-            ret = [];
-            Dom.get("#delegateAdvanced2").focus();
-        }, function (next) {
-            setTimeout(100, next);
-        },
-            function (next) {
-                expect(ret).to.eql([]);
-            }], done);
+        async.series([
+                runs(function () {
+                    expect(ret).to.eql([3]);
+                }),
+                runs(function () {
+                    ret = [];
+                    Dom.get("#delegateAdvanced2").focus();
+                }),
+                waits(100),
+                runs(function () {
+                    expect(ret).to.eql([]);
+                })
+            ],
+            done);
     });
 
     it("should undelegate specified filter with eventType only delegates", function (done) {
@@ -173,20 +173,21 @@ describe('delegate-advanced', function () {
 
         Event.undelegate("#delegateAdvanced", null, 'input');
         Dom.get("#delegateAdvanced2").click();
-        async.series([function (next) {
-            setTimeout(100, next);
-        }, function () {
-            expect(ret).to.eql([2, 3]);
-        }, function () {
-            ret = [];
-            Dom.get("#delegateAdvanced2").focus();
-        }, function (next) {
-            setTimeout(100, next);
-        }, function () {
-            expect(ret).to.eql([]);
-        }], done);
+        async.series([
+            waits(100),
+            runs(function () {
+                expect(ret).to.eql([2, 3]);
+            }),
+            runs(function () {
+                ret = [];
+                Dom.get("#delegateAdvanced2").focus();
+            }),
+            waits(100),
+            runs(function () {
+                expect(ret).to.eql([]);
+            })
+        ], done);
     });
-
 
     it("should undelegate specified fn only delegates", function (done) {
         var ret = [], t;
@@ -207,7 +208,6 @@ describe('delegate-advanced', function () {
         }, 100);
     });
 
-
     it("should undelegate specified eventType only delegates", function (done) {
         var ret = [];
         Event.delegate("#delegateAdvanced", 'click', 'input', function () {
@@ -225,21 +225,22 @@ describe('delegate-advanced', function () {
         Event.undelegate("#delegateAdvanced", 'click');
         Dom.get("#delegateAdvanced2").click();
         async.series([
-            function (next) {
+            runs(function (next) {
                 setTimeout(next, 100);
-            },
-            function () {
+            }),
+            runs(function () {
                 expect(ret).to.eql([3]);
-            },
-            function () {
+            }),
+            runs(function () {
                 ret = [];
                 Dom.get("#delegateAdvanced2").focus();
-            },
-            function (next) {
+            }),
+            runs(function (next) {
                 setTimeout(next, 100);
-            }, function () {
+            }),
+            runs(function () {
                 expect(ret).to.eql([4]);
-            }
+            })
         ], done);
     });
 
@@ -253,7 +254,7 @@ describe('delegate-advanced', function () {
         setTimeout(function () {
             expect(ret).to.eql([]);
             done();
-        },100);
+        }, 100);
     });
 
     it("remove remove delegate with event", function (done) {
@@ -266,7 +267,7 @@ describe('delegate-advanced', function () {
         setTimeout(function () {
             expect(ret).to.eql([]);
             done();
-        },100);
+        }, 100);
     });
 
     it("remove remove delegate with fn", function (done) {
@@ -279,7 +280,7 @@ describe('delegate-advanced', function () {
         setTimeout(function () {
             expect(ret).to.eql([]);
             done();
-        },100);
+        }, 100);
     });
 
     it("remove remove delegate with event and fn", function (done) {
@@ -292,8 +293,6 @@ describe('delegate-advanced', function () {
         setTimeout(function () {
             expect(ret).to.eql([]);
             done();
-        },100);
+        }, 100);
     });
-
-
 });

@@ -132,8 +132,9 @@ describe("hashchange event", function () {
     it("no xss!", function (done) {
         location.hash = "x=<script>parent.HASH_XSS=1;</script>";
         setTimeout(function () {
-            expect(window.HASH_XSS).to.beUndefined();
-        },done);
+            expect(window.HASH_XSS).to.be(undefined);
+            done();
+        }, 400);
     });
 
 });

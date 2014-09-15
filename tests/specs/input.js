@@ -65,6 +65,7 @@ describe("input event", function () {
 
     it('support bubble', function (done) {
         if (UA.ie && UA.ieMode < 9) {
+            done();
             return;
         }
 

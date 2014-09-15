@@ -10,4 +10,4 @@ require('./focusin');
 require('./ie');
 require('./input');
 require('./mouse');
-require('./guesture/')
+require('./gesture/')

@@ -42,7 +42,6 @@ describe('delegate', function () {
         simulateEvent(a, 'click', {
             which: 1
         });
-        var time = Date.now();
         async.series([
             waits(1000),
             runs(function () {

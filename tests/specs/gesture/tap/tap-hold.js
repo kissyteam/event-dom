@@ -15,6 +15,7 @@ describe('tapHold', function () {
     var t, delay = 1500;
 
     beforeEach(function () {
+        window.scrollTo(0, 0);
         t = $('<div style="border:1px solid red;' +
             'width:100px;' +
             'height:100px;"></div>').prependTo('body');
@@ -95,7 +96,8 @@ describe('tapHold', function () {
             targetTouches: touches
         });
 
-        async.series([waits(30),
+        async.series([
+            waits(30),
 
             runs(function () {
 
@@ -111,7 +113,8 @@ describe('tapHold', function () {
 
             runs(function () {
                 expect(called).to.be(0);
-            })], done);
+            })
+        ], done);
     });
 
     it('does not fire when touchmove occurs', function (done) {
@@ -157,13 +160,11 @@ describe('tapHold', function () {
         tasks.push(waits(30));
 
         tasks.push(runs(function () {
-
             simulateEvent(t[0], 'touchend', {
                 touches: [],
                 changedTouches: touches,
                 targetTouches: []
             });
-
         }));
 
         tasks.push(waits(30));
@@ -195,17 +196,14 @@ describe('tapHold', function () {
             targetTouches: touches
         });
 
-
         async.series([waits(30),
 
             runs(function () {
-
                 simulateEvent(t[0], 'touchend', {
                     touches: [],
                     changedTouches: touches,
                     targetTouches: []
                 });
-
             }),
 
             waits(30),

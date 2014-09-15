@@ -9,15 +9,13 @@ var SINGLE_TAP = TapType.SINGLE_TAP;
 var step = 10;
 
 describe('doubleTap/singleTap', function () {
-
     var t, delay = 500;
 
     beforeEach(function () {
-
+        window.scrollTo(0, 0);
         t = $('<div style="border:1px solid red;' +
             'width:100px;' +
             'height:100px;"></div>').prependTo('body');
-
     });
 
     afterEach(function () {
@@ -25,7 +23,6 @@ describe('doubleTap/singleTap', function () {
     });
 
     it('doubleTap fires,singleTap not fired', function (done) {
-
         var doubleCalled = 0, singleCalled = 0;
 
         Event.on(t[0], DOUBLE_TAP, function (e) {
@@ -46,7 +43,6 @@ describe('doubleTap/singleTap', function () {
         ];
 
         async.series([
-
             runs(function () {
                 simulateEvent(t[0], 'touchstart', {
                     touches: touches,
@@ -58,13 +54,11 @@ describe('doubleTap/singleTap', function () {
             waits(30),
 
             runs(function () {
-
                 simulateEvent(t[0], 'touchend', {
                     touches: [],
                     changedTouches: touches,
                     targetTouches: []
                 });
-
             }),
 
             waits(30),
@@ -81,13 +75,11 @@ describe('doubleTap/singleTap', function () {
             waits(30),
 
             runs(function () {
-
                 simulateEvent(t[0], 'touchend', {
                     touches: [],
                     changedTouches: touches,
                     targetTouches: []
                 });
-
             }),
 
             waits(delay),
@@ -99,9 +91,7 @@ describe('doubleTap/singleTap', function () {
         ], done);
     });
 
-
     it('doubleTap not fires,singleTap fired twice', function (done) {
-
         var doubleCalled = 0, singleCalled = 0;
 
         Event.on(t[0], DOUBLE_TAP, function () {
@@ -178,9 +168,7 @@ describe('doubleTap/singleTap', function () {
         async.series(tasks,done);
     });
 
-
     it('does not fire when touches number > 1', function (done) {
-
         var called = 0;
 
         Event.on(t[0], [SINGLE_TAP, DOUBLE_TAP], function () {
@@ -209,13 +197,11 @@ describe('doubleTap/singleTap', function () {
         tasks.push(waits(30));
 
         tasks.push(runs(function () {
-
             simulateEvent(t[0], 'touchend', {
                 touches: [],
                 changedTouches: touches,
                 targetTouches: []
             });
-
         }));
 
         tasks.push(waits(delay));
@@ -228,8 +214,6 @@ describe('doubleTap/singleTap', function () {
     });
 
     it('does not fire when touchmove occurs', function (done) {
-
-
         var called = 0;
 
         Event.on(t[0], [SINGLE_TAP, DOUBLE_TAP], function () {
@@ -267,13 +251,11 @@ describe('doubleTap/singleTap', function () {
         tasks.push(waits(30));
 
         tasks.push(runs(function () {
-
             simulateEvent(t[0], 'touchend', {
                 touches: [],
                 changedTouches: touches,
                 targetTouches: []
             });
-
         }));
 
         tasks.push(waits(delay));
@@ -283,7 +265,5 @@ describe('doubleTap/singleTap', function () {
         }));
 
         async.series(tasks,done);
-
     });
-
 });

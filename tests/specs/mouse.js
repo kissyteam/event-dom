@@ -11,8 +11,8 @@ var simulate = function (target, type, relatedTarget) {
     }
     simulateEvent(target, type, { relatedTarget: relatedTarget });
 };
-
 var tpl = '';
+
 $.ajax({
     url: './specs/mouse.html',
     async: false,
@@ -22,7 +22,6 @@ $.ajax({
 });
 
 describe('mouseenter', function () {
-
     beforeEach(function () {
         Dom.prepend(Dom.create(tpl), 'body');
     });
@@ -96,7 +95,6 @@ describe('mouseenter', function () {
         });
 
         it('support multiple on for mouseenter', function (done) {
-
             var enter = [],
                 leave = [],
                 mouseTests = Dom.query('.mouse-test');
@@ -111,9 +109,7 @@ describe('mouseenter', function () {
                 leave.push(e.target.id);
             });
 
-            runs(function () {
-                simulate(mouseTests[0], 'mouseover', document);
-            });
+            simulate(mouseTests[0], 'mouseover', document);
 
             async.series([
 
@@ -143,9 +139,7 @@ describe('mouseenter', function () {
                 })
             ], done);
         });
-
     });
-
 
     describe('clone works', function () {
         it("can clone mouseenter", function (done) {
@@ -264,5 +258,4 @@ describe('mouseenter', function () {
 
         });
     });
-
 });

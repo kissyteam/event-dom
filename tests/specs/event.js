@@ -34,7 +34,7 @@ describe('event', function () {
             if (typeof target === 'string') {
                 target = Dom.get(target);
             }
-            simulateEvent(target, type, { relatedTarget: relatedTarget });
+            simulateEvent(target, type, { relatedTarget: relatedTarget || window });
         };
 
     beforeEach(function () {
@@ -58,7 +58,7 @@ describe('event', function () {
             DomEvent.on(lis, 'click', click);
 
             var observable = DomEvent.getEventListeners(lis[0], 'click');
-            expect(observable).not.to.beFalsy();
+            expect(observable).to.be.ok();
             expect(observable.observers[0].config.fn).to.be(click);
 
             // click all lis
@@ -68,7 +68,7 @@ describe('event', function () {
             setTimeout(function () {
                 expect(count).to.eql(total);
                 done();
-            },0);
+            }, 0);
         });
 
         it('should execute in order.', function (done) {
@@ -89,7 +89,7 @@ describe('event', function () {
                 expect(result.join(SEP)).to.eql([FIRST, SECOND].join(SEP));
                 DomEvent.remove(a);
                 done();
-            },0);
+            }, 0);
         });
 
         it("should support data bind when on and unbind when remove", function (done) {
@@ -105,19 +105,19 @@ describe('event', function () {
             simulate(a, 'click');
             async.series([
                 waits(0),
-                function () {
+                runs(function () {
                     expect(data.y).to.be(1);
                     DomEvent.remove(a);
-                },
-                function () {
+                }),
+                runs(function () {
                     data = null;
                     simulate(a, 'click');
-                },
+                }),
                 waits(0),
-                function () {
+                runs(function () {
                     expect(data).to.be(null);
-                }
-            ],done);
+                })
+            ], done);
         });
 
         it('should prevent default behavior (do nothing if using "return false;").', function (done) {
@@ -138,10 +138,10 @@ describe('event', function () {
             cb1.click();
             cb2.click();
             setTimeout(function () {
-                expect(cb1.checked).to.beFalsy();
-                expect(cb2.checked).to.beFalsy();
+                expect(cb1.checked).not.to.be.ok();
+                expect(cb2.checked).not.to.be.ok();
                 done();
-            },0);
+            }, 0);
         });
 
         it('should stop event\'s propagation.', function (done) {
@@ -155,23 +155,23 @@ describe('event', function () {
             });
 
             async.series([
-                function () {
+                runs(function () {
                     result = null;
                     simulate(c1, 'click');
-                },
+                }),
                 waits(0),
-                function () {
+                runs(function () {
                     expect(result).to.eql(HAPPENED);
-                },
-                function () {
+                }),
+                runs(function () {
                     result = null;
                     simulate(c2, 'click');
-                },
+                }),
                 waits(0),
-                function () {
-                    expect(result).to.beNull();
-                }
-            ],done);
+                runs(function () {
+                    expect(result).to.be(null);
+                })
+            ], done);
         });
 
         it("should stop event's propagation immediately.", function (done) {
@@ -197,23 +197,23 @@ describe('event', function () {
             });
 
             async.series([
-                function () {
+                runs(function () {
                     result = [];
                     simulate(d1, 'click');
-                },
+                }),
                 waits(0),
-                function () {
+                runs(function () {
                     expect(result.join(SEP)).to.eql([FIRST, SECOND, HAPPENED].join(SEP));
-                },
-                function () {
+                }),
+                runs(function () {
                     result = [];
                     simulate(d2, 'click');
-                },
+                }),
                 waits(0),
-                function () {
+                runs(function () {
                     expect(result.join(SEP)).to.eql([FIRST].join(SEP));
-                }
-            ],done);
+                })
+            ], done);
         });
 
         it('should do nothing else to event\'s propagation if using "return false;".', function (done) {
@@ -239,27 +239,26 @@ describe('event', function () {
             });
 
             async.series([
-                function () {
+                runs(function () {
                     result = [];
                     simulate(e1, 'click');
-                },
+                }),
                 waits(0),
-                function () {
+                runs(function () {
                     expect(result.join(SEP)).to.eql([FIRST, SECOND, HAPPENED].join(SEP));
-                },
-                function () {
+                }),
+                runs(function () {
                     result = [];
                     simulate(e2, 'click');
-                },
+                }),
                 waits(0),
-                function () {
+                runs(function () {
                     expect(result.join(SEP)).to.eql([FIRST, SECOND].join(SEP));
-                }
-            ],done);
+                })
+            ], done);
         });
 
-        it('isDefaultPrevented is set correctly', function () {
-            var ok = 0;
+        it('isDefaultPrevented is set correctly', function (done) {
             DomEvent.on('#event-test-data', 'click', function (e) {
                 expect(e.isDefaultPrevented()).to.be(true);
                 DomEvent.detach('#event-test-data');
@@ -273,7 +272,6 @@ describe('event', function () {
                 e.preventDefault();
             });
             simulateEvent(Dom.get('#link-f'), 'click');
-
         });
     });
 
@@ -297,9 +295,9 @@ describe('event', function () {
             result = null;
             simulate(f, 'click');
             setTimeout(function () {
-                expect(result).to.beNull();
+                expect(result).to.be(null);
                 done();
-            },0);
+            }, 0);
         });
 
 
@@ -322,9 +320,9 @@ describe('event', function () {
             result = null;
             simulate(f, 'click');
             setTimeout(function () {
-                expect(result).to.beNull();
+                expect(result).to.be(null);
                 done();
-            },0);
+            }, 0);
         });
 
         it('should remove all the event handlers of the specified event type.', function (done) {
@@ -345,7 +343,7 @@ describe('event', function () {
             setTimeout(function () {
                 expect(result.join(SEP)).to.eql([].join(SEP));
                 done();
-            },0);
+            }, 0);
         });
 
         it('should remove all the event handler of the specified element', function (done) {
@@ -369,7 +367,7 @@ describe('event', function () {
             setTimeout(function () {
                 expect(result.join(SEP)).to.eql([].join(SEP));
                 done();
-            },0);
+            }, 0);
         });
 
 
@@ -508,7 +506,7 @@ describe('event', function () {
             setTimeout(function () {
                 expect(result[1]).not.to.eql(result[2]);
                 done();
-            },10);
+            }, 10);
         });
 
         it('should guarantee separate event adding function keeps separate context with multiple event.', function (done) {
@@ -521,18 +519,19 @@ describe('event', function () {
                 re.push(this.id);
             }
 
-            async.series([function () {
-                simulate(doc, 'click');
-            },
+            async.series([
+                runs(function () {
+                    simulate(doc, 'click');
+                }),
                 waits(10),
-                function () {
+                runs(function () {
                     simulate(doc, 'keydown');
-                },
+                }),
                 waits(10),
-                function () {
+                runs(function () {
                     expect(re).to.eql([FIRST, SECOND, FIRST, SECOND]);
-                }
-            ],done);
+                })
+            ], done);
         });
     });
 
@@ -618,15 +617,13 @@ describe('event', function () {
             var domEventObservables = domEventObservablesHolder.observables;
             num = 0;
             for (i in domEventObservables) {
-
                 expect(util.inArray(i, ['keydown']))
                     .to.be(true);
                 num++;
-
             }
             expect(num).to.be(1);
             var clickEventObserver = domEventObservables.click;
-            expect(clickEventObserver).to.beUndefined();
+            expect(clickEventObserver).to.be(undefined);
         })();
 
         DomEvent.remove(domNode);

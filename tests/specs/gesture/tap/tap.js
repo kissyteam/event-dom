@@ -10,7 +10,6 @@ var TAP_HOLD = TapGesture.TAP_HOLD;
 var step = 10;
 
 describe('tap', function () {
-
     function fireTap(t, touches, tasks) {
         var offset = t.offset();
 
@@ -43,11 +42,10 @@ describe('tap', function () {
     var t;
 
     beforeEach(function () {
-
+        window.scrollTo(0, 0);
         t = $('<div style="border:1px solid red;' +
             'width:100px;' +
             'height:100px;"></div>').prependTo('body');
-
     });
 
     afterEach(function () {
@@ -80,7 +78,6 @@ describe('tap', function () {
 
         async.series(tasks, done);
     });
-
 
     it('does not fire when touches number > 1', function () {
         var called = 0;
@@ -181,6 +178,5 @@ describe('tap', function () {
 
         async.series(tasks, done);
     });
-
 });
 

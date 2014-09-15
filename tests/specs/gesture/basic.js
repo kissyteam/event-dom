@@ -7,17 +7,27 @@ var UA = require('ua');
 var Event = require('event-dom');
 var BasicGesture = require('event-dom/gesture/basic');
 var Feature = require('feature');
-describe('base gesture', function () {
-    if (!UA.ios && UA.ieMode >= 10) {
+describe('basic gesture', function () {
+    var d;
+    beforeEach(function () {
+        window.scrollTo(0, 0);
+        d = $('<div style="position:absolute;left:0;top:0;width: 100px;height: 100px"></div>');
+        d.appendTo(document.body);
+    });
+
+    afterEach(function () {
+        Event.detach(d[0]);
+        d.remove();
+        Event.detach(document);
+    });
+
+    if (!UA.ios && (UA.ieMode >= 10 || !UA.ie)) {
         it('works for mouse', function (done) {
-            var d = $('<div style="position:absolute;left:0;top:0;width: 100px;height: 100px"></div>');
-            d.appendTo(document.body);
-            var doc = $(document);
             var start = 0;
             var move = 0;
             var end = 0;
 
-            Event.on(doc, BasicGesture.START, function (e) {
+            Event.on(document, BasicGesture.START, function (e) {
                 expect(e.gestureType || 'mouse').to.be('mouse');
                 start = 1;
                 expect(e.touches.length).to.be(1);
@@ -27,7 +37,7 @@ describe('base gesture', function () {
                 expect(e.pageY).to.be(10);
             });
 
-            Event.on(doc, BasicGesture.MOVE, function (e) {
+            Event.on(document, BasicGesture.MOVE, function (e) {
                 expect(e.touches.length).to.be(1);
                 expect(e.gestureType || 'mouse').to.be('mouse');
                 move = 1;
@@ -37,7 +47,7 @@ describe('base gesture', function () {
                 expect(e.pageY).to.be(16);
             });
 
-            Event.on(doc, BasicGesture.END, function (e) {
+            Event.on(document, BasicGesture.END, function (e) {
                 expect(e.touches.length).to.be(0);
                 expect(e.changedTouches.length).to.be(1);
                 expect(e.gestureType || 'mouse').to.be('mouse');
@@ -85,21 +95,17 @@ describe('base gesture', function () {
                     expect(start).to.be(1);
                     expect(move).to.be(1);
                     expect(end).to.be(1);
-                    d.remove();
-                    doc.detach();
                 })], done);
         });
     }
 
     if (Feature.isTouchEventSupported()) {
         it('works for touch events', function (done) {
-            var d = $('<div style="position:absolute;left:0;top:0;width: 100px;height: 100px"></div>');
-            d.appendTo(document.body);
             var start = 0;
             var move = 0;
             var end = 0;
 
-            Event.on(d, BasicGesture.START, function (e) {
+            Event.on(d[0], BasicGesture.START, function (e) {
                 expect(e.gestureType).to.be('touch');
                 start = 1;
                 expect(e.touches.length).to.be(2);
@@ -109,7 +115,7 @@ describe('base gesture', function () {
                 expect(e.touches[1].pageX).to.be(11);
 
             });
-            Event.on(d, BasicGesture.MOVE, function (e) {
+            Event.on(d[0], BasicGesture.MOVE, function (e) {
                 expect(e.gestureType).to.be('touch');
                 move = 1;
                 expect(e.touches.length).to.be(2);
@@ -119,7 +125,7 @@ describe('base gesture', function () {
                 expect(e.touches[1].pageX).to.be(26);
             });
 
-            Event.on(d, BasicGesture.END, function (e) {
+            Event.on(d[0], BasicGesture.END, function (e) {
                 expect(e.gestureType).to.be('touch');
                 end = 1;
                 expect(e.touches.length).to.be(1);
@@ -164,73 +170,72 @@ describe('base gesture', function () {
                 });
             }),
 
-            waits(100),
-            runs(function () {
-                simulateEvent(d[0], 'touchmove', {
-                    touches: [
-                        {
-                            pageX: 16,
-                            pageY: 16
-                        },
-                        {
-                            pageX: 26,
-                            pageY: 26
-                        }
-                    ],
-                    changedTouches: [
-                        {
-                            pageX: 16,
-                            pageY: 16
-                        },
-                        {
-                            pageX: 26,
-                            pageY: 26
-                        }
-                    ],
-                    targetTouches: [
-                        {
-                            pageX: 16,
-                            pageY: 16
-                        },
-                        {
-                            pageX: 26,
-                            pageY: 26
-                        }
-                    ]
-                });
-            }),
+                waits(100),
+                runs(function () {
+                    simulateEvent(d[0], 'touchmove', {
+                        touches: [
+                            {
+                                pageX: 16,
+                                pageY: 16
+                            },
+                            {
+                                pageX: 26,
+                                pageY: 26
+                            }
+                        ],
+                        changedTouches: [
+                            {
+                                pageX: 16,
+                                pageY: 16
+                            },
+                            {
+                                pageX: 26,
+                                pageY: 26
+                            }
+                        ],
+                        targetTouches: [
+                            {
+                                pageX: 16,
+                                pageY: 16
+                            },
+                            {
+                                pageX: 26,
+                                pageY: 26
+                            }
+                        ]
+                    });
+                }),
 
-            waits(300),
-            runs(function () {
-                simulateEvent(d[0], 'touchend', {
-                    touches: [
-                        {
-                            pageX: 26,
-                            pageY: 26
-                        }
-                    ],
-                    changedTouches: [
-                        {
-                            pageX: 16,
-                            pageY: 16
-                        }
-                    ],
-                    targetTouches: [
-                        {
-                            pageX: 26,
-                            pageY: 26
-                        }
-                    ]
-                });
-            }),
+                waits(300),
+                runs(function () {
+                    simulateEvent(d[0], 'touchend', {
+                        touches: [
+                            {
+                                pageX: 26,
+                                pageY: 26
+                            }
+                        ],
+                        changedTouches: [
+                            {
+                                pageX: 16,
+                                pageY: 16
+                            }
+                        ],
+                        targetTouches: [
+                            {
+                                pageX: 26,
+                                pageY: 26
+                            }
+                        ]
+                    });
+                }),
 
-            waits(300),
-            runs(function () {
-                expect(start).to.be(1);
-                expect(move).to.be(1);
-                expect(end).to.be(1);
-                d.remove();
-            })],done);
+                waits(300),
+                runs(function () {
+                    expect(start).to.be(1);
+                    expect(move).to.be(1);
+                    expect(end).to.be(1);
+                })], done);
         });
     }
 });

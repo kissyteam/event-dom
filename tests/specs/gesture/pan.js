@@ -2,52 +2,63 @@
  * test drag gesture
  * @author yiminghe@gmail.com
  */
-(function () {
-    var UA = require('ua');
-    var Event = require('event-dom');
-    var PanGesture = require('event-dom/gesture/pan');
-    var Feature = require('feature');
 
-    describe('drag gesture', function () {
-        if (!UA.ios&& UA.ieMode >= 10) {
-            it('works for mouse', function (done) {
-                var d = $('<div style="position:absolute;left:0;top:0;width: 100px;height: 100px"></div>');
-                d.appendTo(document.body);
-                var start = 0;
-                var move = 0;
-                var end = 0;
+var UA = require('ua');
+var Event = require('event-dom');
+var PanGesture = require('event-dom/gesture/pan');
+var Feature = require('feature');
 
-                Event.on(d[0],PanGesture.PAN_START, function (e) {
-                    expect(e.gestureType||'mouse').to.be('mouse');
-                    start = 1;
-                    expect(e.pageX).to.be(14);
-                    expect(e.pageY).to.be(14);
-                    e.preventDefault();
+describe('pan gesture', function () {
+    var d;
+    beforeEach(function(){
+        window.scrollTo(0, 0);
+        d = $('<div style="position:absolute;left:0;top:0;width: 100px;height: 100px"></div>');
+        d.appendTo(document.body);
+    });
+
+    afterEach(function(){
+        Event.detach(d[0]);
+        d.remove();
+        Event.detach(document);
+    });
+
+    if (!UA.ios && (UA.ieMode >= 10 || !UA.ie)) {
+        it('works for mouse', function (done) {
+            var start = 0;
+            var move = 0;
+            var end = 0;
+
+            Event.on(d[0], PanGesture.PAN_START, function (e) {
+                expect(e.gestureType || 'mouse').to.be('mouse');
+                start = 1;
+                expect(e.pageX).to.be(14);
+                expect(e.pageY).to.be(14);
+                e.preventDefault();
+            });
+
+            Event.on(d[0], PanGesture.PAN, function (e) {
+                expect(e.gestureType || 'mouse').to.be('mouse');
+                move = 1;
+                expect(e.pageX).to.be(16);
+                expect(e.pageY).to.be(16);
+                e.preventDefault();
+            });
+
+            Event.on(d[0], PanGesture.PAN_END, function (e) {
+                expect(e.gestureType || 'mouse').to.be('mouse');
+                end = 1;
+                expect(e.pageX).to.be(16);
+                expect(e.pageY).to.be(16);
+                expect(e.velocityX).not.to.be(0);
+                expect(e.velocityY).not.to.be(0);
+            });
+
+            async.series([runs(function () {
+                simulateEvent(d[0], 'mousedown', {
+                    clientX: 10,
+                    clientY: 10
                 });
-
-                Event.on(d[0],PanGesture.PAN, function (e) {
-                    expect(e.gestureType||'mouse').to.be('mouse');
-                    move = 1;
-                    expect(e.pageX).to.be(16);
-                    expect(e.pageY).to.be(16);
-                    e.preventDefault();
-                });
-
-                Event.on(d[0],PanGesture.PAN_END, function (e) {
-                    expect(e.gestureType||'mouse').to.be('mouse');
-                    end = 1;
-                    expect(e.pageX).to.be(16);
-                    expect(e.pageY).to.be(16);
-                    expect(e.velocityX).not.to.be(0);
-                    expect(e.velocityY).not.to.be(0);
-                });
-
-                async.series([runs(function () {
-                    simulateEvent(d[0], 'mousedown', {
-                        clientX: 10,
-                        clientY: 10
-                    });
-                }),
+            }),
 
                 waits(30),
                 runs(function () {
@@ -88,65 +99,62 @@
                     expect(start).to.be(1);
                     expect(move).to.be(1);
                     expect(end).to.be(1);
-                    d.remove();
-                })],done);
+                })], done);
+        });
+    }
+
+    if (Feature.isTouchEventSupported()) {
+        it('works for touch events', function () {
+            var start = 0;
+            var move = 0;
+            var end = 0;
+
+            Event.on(d[0], PanGesture.PAN_START, function (e) {
+                expect(e.gestureType).to.be('touch');
+                start = 1;
+                expect(e.pageX).to.be(14);
+                expect(e.pageY).to.be(14);
+                e.preventDefault();
             });
-        }
 
-        if (Feature.isTouchEventSupported()) {
-            it('works for touch events', function () {
-                var d = $('<div style="position:absolute;left:0;top:0;width: 100px;height: 100px"></div>');
-                d.appendTo(document.body);
-                var start = 0;
-                var move = 0;
-                var end = 0;
+            Event.on(d[0], PanGesture.PAN, function (e) {
+                expect(e.gestureType).to.be('touch');
+                move = 1;
+                expect(e.pageX).to.be(16);
+                expect(e.pageY).to.be(16);
+                e.preventDefault();
+            });
 
-                Event.on(d[0],PanGesture.PAN_START, function (e) {
-                    expect(e.gestureType).to.be('touch');
-                    start = 1;
-                    expect(e.pageX).to.be(14);
-                    expect(e.pageY).to.be(14);
-                    e.preventDefault();
+            Event.on(d[0], PanGesture.PAN_END, function (e) {
+                expect(e.gestureType).to.be('touch');
+                end = 1;
+                expect(e.pageX).to.be(16);
+                expect(e.pageY).to.be(16);
+                expect(e.velocityX).not.to.be(0);
+                expect(e.velocityY).not.to.be(0);
+            });
+            async.series([runs(function () {
+                simulateEvent(d[0], 'touchstart', {
+                    touches: [
+                        {
+                            pageX: 10,
+                            pageY: 10
+                        }
+                    ],
+                    changedTouches: [
+                        {
+                            pageX: 10,
+                            pageY: 10
+                        }
+                    ],
+                    targetTouches: [
+                        {
+                            pageX: 10,
+                            pageY: 10
+                        }
+                    ]
                 });
-
-                Event.on(d[0],PanGesture.PAN, function (e) {
-                    expect(e.gestureType).to.be('touch');
-                    move = 1;
-                    expect(e.pageX).to.be(16);
-                    expect(e.pageY).to.be(16);
-                    e.preventDefault();
-                });
-
-                Event.on(d[0],PanGesture.PAN_END, function (e) {
-                    expect(e.gestureType).to.be('touch');
-                    end = 1;
-                    expect(e.pageX).to.be(16);
-                    expect(e.pageY).to.be(16);
-                    expect(e.velocityX).not.to.be(0);
-                    expect(e.velocityY).not.to.be(0);
-                });
-                async.series([runs(function () {
-                    simulateEvent(d[0], 'touchstart', {
-                        touches: [
-                            {
-                                pageX: 10,
-                                pageY: 10
-                            }
-                        ],
-                        changedTouches: [
-                            {
-                                pageX: 10,
-                                pageY: 10
-                            }
-                        ],
-                        targetTouches: [
-                            {
-                                pageX: 10,
-                                pageY: 10
-                            }
-                        ]
-                    });
-                }),
+            }),
 
                 waits(30),
                 runs(function () {
@@ -249,63 +257,60 @@
                     expect(start).to.be(1);
                     expect(move).to.be(1);
                     expect(end).to.be(1);
-                    d.remove();
-                })],done);
+                })], done);
+        });
+        it('does not work for more than two touches', function (done) {
+            var start = 0;
+            var move = 0;
+            var end = 0;
+
+            Event.on(d[0], PanGesture.PAN_START, function (e) {
+                expect(e.gestureType).to.be('touch');
+                start = 1;
+                expect(e.pageX).to.be(14);
+                expect(e.pageY).to.be(14);
+                e.preventDefault();
             });
-            it('does not work for more than two touches', function (done) {
-                var d = $('<div style="position:absolute;left:0;top:0;width: 100px;height: 100px"></div>');
-                d.appendTo(document.body);
-                var start = 0;
-                var move = 0;
-                var end = 0;
 
-                Event.on(d[0],PanGesture.PAN_START, function (e) {
-                    expect(e.gestureType).to.be('touch');
-                    start = 1;
-                    expect(e.pageX).to.be(14);
-                    expect(e.pageY).to.be(14);
-                    e.preventDefault();
+            Event.on(d[0], PanGesture.PAN, function (e) {
+                expect(e.gestureType).to.be('touch');
+                move = 1;
+                expect(e.pageX).to.be(16);
+                expect(e.pageY).to.be(16);
+                e.preventDefault();
+            });
+
+            Event.on(d[0], PanGesture.PAN_END, function (e) {
+                expect(e.gestureType).to.be('touch');
+                end = 1;
+                expect(e.pageX).to.be(16);
+                expect(e.pageY).to.be(16);
+                expect(e.velocityX).not.to.be(0);
+                expect(e.velocityY).not.to.be(0);
+            });
+
+            async.series([runs(function () {
+                simulateEvent(d[0], 'touchstart', {
+                    touches: [
+                        {
+                            pageX: 10,
+                            pageY: 10
+                        }
+                    ],
+                    changedTouches: [
+                        {
+                            pageX: 10,
+                            pageY: 10
+                        }
+                    ],
+                    targetTouches: [
+                        {
+                            pageX: 10,
+                            pageY: 10
+                        }
+                    ]
                 });
-
-                Event.on(d[0],PanGesture.PAN, function (e) {
-                    expect(e.gestureType).to.be('touch');
-                    move = 1;
-                    expect(e.pageX).to.be(16);
-                    expect(e.pageY).to.be(16);
-                    e.preventDefault();
-                });
-
-                Event.on(d[0],PanGesture.PAN_END, function (e) {
-                    expect(e.gestureType).to.be('touch');
-                    end = 1;
-                    expect(e.pageX).to.be(16);
-                    expect(e.pageY).to.be(16);
-                    expect(e.velocityX).not.to.be(0);
-                    expect(e.velocityY).not.to.be(0);
-                });
-
-                async.series([runs(function () {
-                    simulateEvent(d[0], 'touchstart', {
-                        touches: [
-                            {
-                                pageX: 10,
-                                pageY: 10
-                            }
-                        ],
-                        changedTouches: [
-                            {
-                                pageX: 10,
-                                pageY: 10
-                            }
-                        ],
-                        targetTouches: [
-                            {
-                                pageX: 10,
-                                pageY: 10
-                            }
-                        ]
-                    });
-                }),
+            }),
 
                 waits(30),
                 runs(function () {
@@ -456,9 +461,7 @@
                     expect(start).to.be(1);
                     expect(move).to.be(1);
                     expect(end).to.be(1);
-                    d.remove();
-                })],done);
-            });
-        }
-    });
-})();
+                })], done);
+        });
+    }
+});

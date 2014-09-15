@@ -18,18 +18,18 @@ describe('focus', function () {
         Event.fire(n, 'focus');
         async.series([
             waits(100),
-            function () {
+            runs(function () {
                 expect(ret).to.be(1);
                 expect(document.activeElement).to.be(n);
                 Event.fire(n, 'focus');
-            },
+            }),
             waits(100),
-            function () {
+            runs(function () {
                 expect(ret).to.be(2);
                 expect(document.activeElement).to.be(n);
                 Dom.remove(n);
-            }
-        ],done);
+            })
+        ], done);
     });
 
     it('fired in correct order', function (done) {
@@ -74,22 +74,22 @@ describe('focus', function () {
 
         async.series([
             waits(400),
-            function () {
+            runs(function () {
                 expect(document.activeElement).to.be(input);
                 expect(ret).to.eql(['input focusin', 'inner', 'outer', 'input focus']);
                 ret = [];
-            },
+            }),
             waits(400),
-            function () {
+            runs(function () {
                 Event.fire(input, 'focus');
-            },
-            function () {
+            }),
+            runs(function () {
                 expect(document.activeElement).to.be(input);
                 expect(ret).to.eql(['input focusin', 'inner', 'outer', 'input focus']);
                 ret = [];
                 Dom.remove(outer);
-            }
-        ],done);
+            })
+        ], done);
     });
 
     it('fired handlers in correct order', function (done) {
@@ -128,21 +128,21 @@ describe('focus', function () {
 
         async.series([
             waits(100),
-            function () {
+            runs(function () {
                 expect(document.activeElement).not.to.be(input);
                 expect(ret).to.eql(['input focus']);
                 ret = [];
-            },
+            }),
             waits(100),
-            function () {
+            runs(function () {
                 Event.fireHandler(input, 'focus');
-            },
-            function () {
+            }),
+            runs(function () {
                 expect(document.activeElement).not.to.be(input);
                 expect(ret).to.eql(['input focus']);
                 ret = [];
                 Dom.remove(outer);
-            }
-        ],done);
+            })
+        ], done);
     });
 });
