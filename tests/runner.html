@@ -17,11 +17,20 @@
 
 <div id='mocha'></div>
 <script src="/bower_components/modulex/build/modulex-debug.js"></script>
+<script src="/bower_components/ua/build/ua-debug.js"></script>
+<script src="/bower_components/feature/build/feature-debug.js"></script>
+<script>
+    var UA, Feature;
+    modulex.use(['ua', 'feature'], function (UAx, Featurex) {
+        UA = UAx;
+        Feature = Featurex;
+    });
+</script>
 <script src="/bower_components/jquery/dist/jquery.js"></script>
 <script src="/bower_components/query-selector/build/query-selector-debug.js"></script>
-<script src="/bower_components/feature/build/feature-debug.js"></script>
+
 <script src="/bower_components/feature/meta/alias.js"></script>
-<script src="/bower_components/ua/build/ua-debug.js"></script>
+
 <script src="/bower_components/ua/meta/alias.js"></script>
 <script src="/bower_components/dom/build/dom/base-debug.js"></script>
 <script src="/bower_components/dom/build/dom/ie-debug.js"></script>
