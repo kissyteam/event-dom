@@ -1,3 +1,8 @@
+/*
+Copyright 2014, modulex-event-dom@1.0.1
+MIT Licensed
+build time: Thu, 16 Oct 2014 04:30:50 GMT
+*/
 modulex.add("event-dom/ie", ["event-dom/base","dom"], function(require, exports, module) {
 var eventDomBase = require("event-dom/base");
 var dom = require("dom");

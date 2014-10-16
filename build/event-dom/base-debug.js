@@ -1,3 +1,8 @@
+/*
+Copyright 2014, modulex-event-dom@1.0.1
+MIT Licensed
+build time: Thu, 16 Oct 2014 04:30:50 GMT
+*/
 modulex.add("event-dom/base", ["dom","event-base","modulex-util","ua"], function(require, exports, module) {
 var dom = require("dom");
 var eventBase = require("event-base");
@@ -1227,7 +1232,7 @@ eventDomBase = function (exports) {
   eventDomBaseMouseenter;
   var util = modulexUtil;
   exports = util.merge({
-    version: '1.0.0',
+    version: '1.0.1',
     add: DomEvent.on,
     remove: DomEvent.detach,
     KeyCode: KeyCode,

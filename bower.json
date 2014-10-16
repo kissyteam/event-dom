@@ -7,12 +7,12 @@
         "url": "http://github.com/kissyteam/event-dom.git"
     },
     "dependencies": {
-        "modulex": "modulex#master",
-        "dom": "modulex-dom#master",
-        "event-base": "modulex-event-base#master",
-        "ua": "modulex-ua#master",
-        "util": "modulex-util#master",
-        "feature": "modulex-feature#master"
+        "modulex": "*",
+        "dom": "modulex-dom#1.x",
+        "event-base": "modulex-event-base#1.x",
+        "ua": "modulex-ua#1.x",
+        "util": "modulex-util#1.x",
+        "feature": "modulex-feature#1.x"
     },
     "ignore": [
         "**/*",
