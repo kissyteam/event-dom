@@ -1,8 +1,4 @@
-/*
-Copyright 2014, modulex-event-dom@1.0.1
-MIT Licensed
-build time: Thu, 16 Oct 2014 04:30:50 GMT
-*/
+//! Copyright 2015, kissy-event-dom@1.0.1 MIT Licensed, build time: Thu, 05 Feb 2015 06:25:23 GMT 
 modulex.add("event-dom/gesture/basic", ["event-dom/base","event-dom/gesture/util"], function(require, exports, module) {
 var eventDomBase = require("event-dom/base");
 var eventDomGestureUtil = require("event-dom/gesture/util");
