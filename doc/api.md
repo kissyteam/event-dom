@@ -189,3 +189,36 @@ KISSY.use(['node','event-dom/gesture/tap'], function(S, $, GestureTap){
     })
 });
 ```
+
+==============================================
+
+需要额外说明的还有以下几个事件：
+
+### focusin
+
+除了常见的 focus，blur 事件，[DOM Event level3](http://www.w3.org/TR/DOM-Level-3-Events/#events-focusevent)还定义了 focusin 和 focusout 事件。当一个元素获得焦点或者其子孙元素获得焦点时， focusin 会在该元素上触发（没被子孙元素阻止）。这就是和 focus 事件的区别之处 : 你可以在父元素上监控子元素的 focusin 事件，即 focusin 事件支持冒泡，而 focus 事件不行。
+这个事件常常和 focusout 一起使用
+
+### focusout
+
+常与 focusin 事件配合使用，相关说明请参考 focusin
+
+### hashchange
+
+目前除了 ie67 外都原生支持 hashchange 事件，kissy 对 ie67 也模拟兼容了该事件.
+当浏览器的 hash 值发生变化时会触发此事件，常常被用来实现单页面应用
+
+当用户点击后退与前进进行浏览器导航时会引起 hash 变化
+此事件只能在当前 window 上注册，注册到其他类型元素上无效！ hash 值推荐为 !/xx/ 形式, 前面用 !/ 后面用 / 包起来，否则 ie67 可能有诡异现象。
+
+```
+KISSY.use(['node', 'event/dom'], function(S, $, DomEvent){
+    $(window).on("hashchange",function(){
+        // location.hash -> 当前 hash 值
+    });
+})
+```
+
+### input
+
+当input元素的值改变时触发
